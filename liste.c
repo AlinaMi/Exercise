@@ -36,7 +36,7 @@ Node* add_node(Node** up_node, int val, int print_option)
 	if(new_node == NULL)
 	{
 		printf("Memory allocation failed.\n");
-		return 0;
+		return NULL;
 	}
 
 	/* copy the given data to new node fields */
