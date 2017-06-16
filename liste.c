@@ -32,6 +32,12 @@ Node* add_node(Node** up_node, int val, int print_option)
 {
 	/* memory allocation for the new node */
 	Node* new_node = (Node*)malloc(sizeof(Node));
+	
+	if(new_node == NULL)
+	{
+		printf("Memory allocation failed.\n");
+		return NULL;
+	}
 
 	/* copy the given data to new node fields */
 	new_node -> value = val;
@@ -77,62 +83,43 @@ void print_node(Node* head)
 	}		
 }
 
-
-/* delete the first element of the list if matches*/
-Node* delete_first(Node* head, int val)
+/* delete the first occurrences of the element in the list if matches*/
+Node* delete_first(Node** head, int val)
 {
-	Node *temp, *temp_1;
+    Node* temp = *head, *temp_1;
 
-	temp = head;
-	temp_1 = head->next;
+    /* check if head of the list contains the element, update the 
+       head and check again untill head is different from the element */
+    while ((temp != NULL) && (temp->value == val))
+    {
+        *head = temp->next;   
+        free(temp);               
+        temp = *head;        
+    }
 
-	if((temp != NULL) && (temp->value == val))
-	{
-		head = temp_1;
-		free(temp);
-	}
+    /* store head value after checking */
+    temp_1 = *head;
 
-	/* return new head */
-	return head;
+  /* return the head */ 
+  return temp_1;
 }
 
-/* delete a given element */
-void delete1_node(Node* head, int val) 
+void delete_node(Node** head, int val) 
 {
-	Node *temp, *temp_p, *temp_i, *nn;
+	Node *temp, *temp_p, *temp_i;
 
-	nn = head;
-	/* check if the first element is the one which shall be deleted, 
-	   if yes ->delete it and store in temp_i the new head value */
-	temp_i = delete_first(head,val);
+	/* check if the head contains the seeking element */
+	temp_i = delete_first(head, val);
 
-	/* check if nn and the new head are different 
-	   if yes -> search to see if the first element of the head 
-	   is equal to the one to be deleted 
-	   if no (nn = temp_i) --> means that the element which shall be 
-	   deleted is not the first element of the list*/
-	
-	while(nn != temp_i)
-	{	
-		/* update new head value */
-		nn = temp_i;
-
-		/* search for the next element to see if matches */
-		temp_i = delete_first(head, val);
-	}
-	
-	/* store the new head next value */
-	temp_p = temp_i->next;
-
+	/* check if one of the nodes contain the element */ 
 	for(temp = temp_i; temp != NULL; temp = temp->next)
 	{
-		
 		if(temp->value == val)
 		{
 			temp_p->next = temp->next;
 		}
 		else 
-		{
+		{	
 			temp_p = temp;
 		}
 	}
@@ -167,22 +154,17 @@ void sort_list(Node* head)
 	return;
 }
 
-
-// la asta mai am de lucru
 void flush_list(Node* head)
 {
 	Node* nn,*pp;
 	nn = head;
 	while(nn != NULL)
 	{
-		//nn = head->next;
 		pp = nn;
 		nn = nn->next;
-
 		free((void*)pp);
-		//free((void*)head);
 	}
-		printf("final");
+	printf("List is empty!\n");
 }
 
 int main()
@@ -205,8 +187,8 @@ int main()
 
 	print_node(top);
 
-	delete1_node(top,5);
-	delete1_node(top,1);
+	delete_node(&top,5);
+	delete_node(&top,1);
 
 	printf("after delete:\n");
 	print_node(top);
@@ -214,9 +196,9 @@ int main()
 	printf("after sorting:\n");
 	sort_list(top);
 	print_node(top);
-	//printf("delete:\n");
-	//flush_list(top);
-	//print_node(top);
+	printf("delete:\n");
+	flush_list(top);
+	print_node(top);
 	/*
 	 add_node(&top,9,2);
 	  add_node(&top,1,2);
