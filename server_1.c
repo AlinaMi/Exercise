@@ -9,6 +9,7 @@
 
 #define B_SIZE 1024
 #define CLIENTS 5
+int c;
 
 int main(int argc, char* argv[])
 {
@@ -17,7 +18,7 @@ int main(int argc, char* argv[])
   struct sockaddr_in server_Addr, server_storage;
   FILE *file_1;
   fd_set select_socket;
- 
+  c=1;
   /* create TCP, stream server socket */
   server_socket = socket(PF_INET, SOCK_STREAM, 0);
   
